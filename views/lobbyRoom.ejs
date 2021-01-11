@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lobbyRoom.css">
+    <title>lobby room</title>
+</head>
+<body>
+    <lobbyRoom>
+        <h3>current username: <span class="uName"><%= username %></span></h3>
+        <container>
+            <h3>all room available</h3>
+            <ul id="roomsList">
+                <% rooms.forEach(function(element){  %>
+                <li empty="1">roomName: <span class='room'><%= element.roomName %></span> creator: <span class='creator'><%= element.creator %></span></li>
+                <% })   %>
+            </ul>
+        </container>
+        <container>
+            <label>RoomName:</label>
+            <input type="text" id="roomName">
+            <input id="createRoom" type="submit"value="create  Room" >
+            <input id="enterRoom" type="submit" value="enter Room">
+        </container>
+    </lobbyRoom>
+    <lobbyRoom class="waitRoom"></lobbyRoom>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
+<script src="/js/lobbyRoom.js"></script>
+</html>

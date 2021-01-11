@@ -1,0 +1,37 @@
+.grid{
+    display: flex;
+    flex-wrap: wrap;
+    width: 820px;
+    height: 820px;
+}
+
+.square{
+    width: 40px;
+    height: 40px;
+    border-style: hidden;
+}
+.ground0{
+    background-image: url('../images/ground0.gif');
+    background-size: cover;
+}
+.ground1{
+    background-image: url('../images/ground1.gif');
+    background-size: cover;
+}
+.ground2{
+    background-image: url('../images/ground2.gif');
+    background-size: cover;
+}
+.ground3{
+    background-image: url('../images/ground3.gif');
+    background-size: cover;
+}
+.ground4{
+    background-image: url('../images/ground4.gif');
+    background-size: cover;
+}
+.hero0{
+    background-image: url('../images/hero0.png');
+    height: 40px;
+    width: 40px;
+}

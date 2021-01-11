@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>login page</title>
+</head>
+<body>
+    <div id="login">
+        
+
+        <form action="/enterGame" method="POST">
+            <label>Username</label>
+            <br>
+            <% if (message){ %>
+            <message><%= message %></message>
+            <%  } %>
+            <input class="name" name="userName"type="text"></input>
+            <br>
+            <button class="Btn" type="submit">enter Game Room</button>
+        </form>    
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
+<script src="/js/index.js"></script>
+</html>
