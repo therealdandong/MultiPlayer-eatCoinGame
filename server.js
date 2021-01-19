@@ -16,7 +16,7 @@ const userList = [];
 const userRoom = new Map();
 //socket id : username
 const userSocket = new Map();
-const Rooms=[{roomName:"jack1",creator:"fucker",empty:1}];
+const Rooms=[{roomName:"jack1",creator:"testRoom",empty:1}];
 const Room = [
     {
         roomName:"someRoom",
