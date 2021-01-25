@@ -43,8 +43,7 @@ socket.on('update',(e)=>{
 })
 
 socket.on('updateRoom',(data)=>{
-    console.log('stuffing is going on!!!!');
-    console.log(data);
+
     createWaitRoom(data.room,data);
     if(isCreator){
         bindstartGame();
@@ -118,11 +117,7 @@ function createWaitRoom(roomName,data){
 
 
 function enterRoom(){
-    //1. need to know which room that user has selected
-    
-    console.log(curr);
-    console.log(curr.children[0].innerHTML);
-    console.log(curr.children[1].innerHTML);
+
     let userName = document.querySelector('.uName').innerHTML;
     let roomName = curr.children[0].innerHTML;
     let creator = curr.children[1].innerHTML;
