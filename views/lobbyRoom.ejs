@@ -8,7 +8,7 @@
 </head>
 <body>
     <lobbyRoom>
-        <h3>current username: <span class="uName"><%= username %></span></h3>
+        <h3 id="hugeTitle">current username: <span class="uName"><%= username %></span></h3>
         <container>
             <h3>all room available</h3>
             <ul id="roomsList">
@@ -17,7 +17,7 @@
                 <% })   %>
             </ul>
         </container>
-        <container>
+        <container class ="room2">
             <label>RoomName:</label>
             <input type="text" id="roomName">
             <input id="createRoom" type="submit"value="create  Room" >

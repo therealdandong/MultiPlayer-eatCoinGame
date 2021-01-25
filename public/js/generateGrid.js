@@ -1,25 +1,38 @@
+const socket = io();
 const grid = document.querySelector('.grid');
 let squares;
 const map=[];
 let TID;
+
 let hero0XLocation=0;
 let hero0YLocation=0;
 let direction={"up":3,"down":0,"left":1,"right":2};
 let hero0Direction=direction["down"];
 let score = 0;
 let playerObject = {
-    hero0XLocation:0,
-    hero0YLocation:0,
-    hero0Direction:direction["down"],
+    heroXLocation:0,
+    heroYLocation:0,
+    heroDirection:direction["down"],
     score:0,
-    playerImage:'D:/resumeProject/public/images/hero0.png'
+    playerImage:'../images/hero0.png'
+}
+let guestObject = {
+    heroXLocation:19,
+    heroYLocation:19,
+    heroDirection:direction["down"],
+    score:0,
+    playerImage:'../images/hero1.png'
 }
 
 
 
-// store the coin location, use representation of 8*x +y;
+// store the coin location, use representation of 20*x +y;
 let coinLocation=[];
-function generateMap(){
+function generateMap(map){
+    assignMap(map);
+}
+
+function assignMap(map){
     let ids = 0;
     for(let x=0;x<20;x++){
         let tempRow = [];
@@ -38,6 +51,10 @@ function generateMap(){
         index++;
     })
 }
+
+
+
+
 
 function generateRandomCoin(){
     let coinNumber = 0;
@@ -58,11 +75,10 @@ function generateRandomCoin(){
                 ctx.drawImage(coin,0,0,40,40,0,0,300,140);
                 coinNumber++;
                 coinLocation.push(tempx*20+tempy);
-
             }
         }
     }
-    coin.src = "D:/resumeProject/public/images/goldcoin.png"
+    coin.src = "../images/goldcoin.png"
             
 }
 
@@ -73,7 +89,7 @@ function displayScore(){
 
 
 
-function animatedScript(){
+function characterAnimatedScript(avatar){
     let intervalTime = 100;
     let avatarSize =40;
     let frame = 0;
@@ -83,21 +99,25 @@ function animatedScript(){
     let prevStep;
     character.onload=()=>{
         TID = setInterval(()=>{
-            let temp = hero0XLocation*20+hero0YLocation;
+            let temp = (avatar.heroXLocation*20)+(avatar.heroYLocation);
             if(prevStep!=null){
                 prevStep.clearRect(0,0,300,140);
             }
-            let hero0 = document.getElementById(`${temp}`);
-            let ctx = hero0.getContext('2d');
+            let hero = document.getElementById(`${temp}`);
+            let ctx = hero.getContext('2d');
             prevStep = ctx;
             rowIndex = (frame*avatarSize) % imageWidth;
             frame++;
-            ctx.drawImage(character,rowIndex,hero0Direction*40,avatarSize,avatarSize,0,0,300,140);
+            ctx.drawImage(character,rowIndex,avatar.heroDirection*40,avatarSize,avatarSize,0,0,300,140);
             displayScore();
         },intervalTime);
     };
-    character.src = 'D:/resumeProject/public/images/hero0.png';
+    character.src = avatar.playerImage;
 }
+
+
+
+
 
 function helperCoin(index){
     console.log(coinLocation);
@@ -115,36 +135,35 @@ function helperCoin(index){
 function bindMovingKey(){
     window.addEventListener('keyup',(e)=>{
         if(e.key ==="ArrowLeft"){
-            hero0Direction = direction["left"];
+            playerObject.heroDirection = direction["left"];
             //move left
-            if(hero0YLocation-1>=0 && map[hero0XLocation][hero0YLocation-1]!=2){
-                hero0YLocation-=1;
-                helperCoin((hero0XLocation)*20 + hero0YLocation);
-                
+            if(playerObject.heroYLocation-1>=0 && map[playerObject.heroXLocation][playerObject.heroYLocation-1]!=2){
+                playerObject.heroYLocation-=1;
+                helperCoin((playerObject.heroXLocation)*20 + playerObject.heroYLocation);
             }
         }
         else if(e.key ==="ArrowRight"){
-            hero0Direction = direction["right"];
+            playerObject.heroDirection = direction["right"];
             //move right
-            if(hero0YLocation+1<20&& map[hero0XLocation][hero0YLocation+1]!=2){
-                hero0YLocation+=1;
-                helperCoin((hero0XLocation)*20 + hero0YLocation);
+            if(playerObject.heroYLocation+1<20&& map[playerObject.heroXLocation][playerObject.heroYLocation+1]!=2){
+                playerObject.heroYLocation+=1;
+                helperCoin((playerObject.heroXLocation)*20 + playerObject.heroYLocation);
             }
         }
         else if(e.key === "ArrowUp"){
-            hero0Direction = direction["up"];
+            playerObject.heroDirection = direction["up"];
             //move up
-            if(hero0XLocation-1>=0&& map[hero0XLocation-1][hero0YLocation]!=2){
-                hero0XLocation-=1;
-                helperCoin((hero0XLocation)*20 + hero0YLocation);
+            if(playerObject.heroXLocation-1>=0&& map[playerObject.heroXLocation-1][playerObject.heroYLocation]!=2){
+                playerObject.heroXLocation-=1;
+                helperCoin((playerObject.heroXLocation)*20 + playerObject.heroYLocation);
             }
         }
         else if(e.key ==="ArrowDown"){
-            hero0Direction = direction["down"];
+            playerObject.heroDirection = direction["down"];
             // move down
-            if(hero0XLocation+1<20&& map[hero0XLocation+1][hero0YLocation]!=2){
-                hero0XLocation+=1;
-                helperCoin((hero0XLocation)*20 + hero0YLocation);
+            if(playerObject.heroXLocation+1<20&& map[playerObject.heroXLocation+1][playerObject.heroYLocation]!=2){
+                playerObject.heroXLocation+=1;
+                helperCoin((playerObject.heroXLocation)*20 + playerObject.heroYLocation);
             }
         }
     })
@@ -155,11 +174,11 @@ function bindMovingKey(){
 
 
 function main(){
-    generateMap();
-    animatedScript();
+    generateMap(map);
+    characterAnimatedScript(playerObject);
+    characterAnimatedScript(guestObject);
     bindMovingKey();    
     generateRandomCoin();
-    gameLoop();
 }
 
 main();

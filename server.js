@@ -16,17 +16,17 @@ const userList = [];
 const userRoom = new Map();
 //socket id : username
 const userSocket = new Map();
-const Rooms=[{roomName:"jack1",creator:"fucker",empty:1}];
+const Rooms=[{roomName:"jack1",creator:"testRoom",empty:1}];
 const Room = [
     {
-        roomName:"someRoom",
-        player0:"someone",
-        socketId0:"dfdf",
-        player1:"someone2",
-        socketId1:"adsf",
-        map:null,
-        player0:null,
-        player1:null
+        roomName:"sample",
+        host:"something",
+        hostSocketId:null,
+        guest:"something",
+        guestSocketId:null,
+        map: [[]],
+        "hostKey":"hostKey",
+        "guestKey":"guestKey"
     }
 ]
 app.set('view engine','ejs');
@@ -54,6 +54,7 @@ app.use(body_parser.urlencoded({
 
 app.post("/enterGame",entergame,indexpage);
 app.get("/gameRoom/:uid",LoadUser,displayGameRoom);
+app.get("/:roomId/:key",loadGamePage);
 // app.post("/gameRoom",createroom);
 app.use("/",indexpage);
 
@@ -97,14 +98,114 @@ io.on('connection',(socket)=>{
         console.log(data);
         console.log('register socket id:'+data.socketId);
         console.log('register user data:'+data.userName);
-        userSocket.set(data.socketId,data.userName);
+        userSocket.set(socket.id,data.userName);
     })
     socket.on('startGame',(data)=>{
+        let hostKey = uuidv4();
+        let guestKey = uuidv4();
+        let tempMap = generateMap();
+        Room.push(
+            {
+                roomName:data.currentRoom,
+                host:data.creator,
+                hostSocketId:null,
+                guest:data.others,
+                guestSocketId:null,
+                map: tempMap,
+                "hostKey":hostKey,
+                "guestKey":guestKey
+            }
+        )
+        
+        io.to(findSocketByName(data.creator))
+        .to(findSocketByName(data.others))
+        .emit("getIntoGameRoom",{
+            "room":data.room,
+            "hostKey":hostKey,
+            "guestKey":guestKey
+        });
 
     })
 })
 
+function generateMap(){
+    let ans = [];
+    for(let x=0;x<20;x++){
+        let tempRow = [];
+        for(let y=0;y<20;y++){
+            let tempGround =Math.floor(Math.random()*4); 
+            tempRow.push(tempGround);
+        }
+        ans.push(tempRow);
+    }
+    return ans;
+}
 
+// kind should be "hostKey" or "guestKey"
+function findRoomByKey(kind,key){
+    let ans =null;
+    Room.forEach(function(element){
+        if(element[`${kind}`] === key){
+            ans = element;
+        }
+    })
+    return ans;
+}
+
+// find if a key is hostKey or guestKey
+function isHostKey(key){
+    Room.forEach(function(element){
+        if(element["hostKey"] === key){
+            return "host";
+        }
+        else if(element["guestKey"]===key){
+            return "guest";
+        }
+        
+    })
+    return null;
+}
+
+
+function loadGamePage(req,res,next){
+    console.log("game room started: "+req.params.roomId);
+    console.log("hostKey: "+req.params.key);
+    let currentRoom = findRoomByKey(req.params.key);
+    let roomKind = "";
+    if(currentRoom!=null){
+        if(isHostKey(req.params.key) === "host"){
+            roomKind = "host";
+        }
+        else if(isHostKey(req.params.key) === "guest"){
+            roomKind = "guest";
+        }
+    }
+    
+    res.render("gaming.ejs",{"roomKind":roomKind,"room":currentRoom});
+}
+
+
+/**
+   function: seperateRole 
+   purpose: base on the key to find the 
+
+**/
+
+function seperateRole(){
+
+}
+
+
+function findSocketByName(name){
+    let ansSocket;
+    userSocket.forEach(function(uname,sId){
+        
+        if(uname == name){
+            ansSocket = sId;
+        }
+    })
+    return ansSocket;
+}
 
 
 function updateRoomObject(RoomName){

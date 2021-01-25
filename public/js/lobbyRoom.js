@@ -50,6 +50,13 @@ socket.on('updateRoom',(data)=>{
         bindstartGame();
     }
 })
+socket.on('getIntoGameRoom',(data)=>{
+    if(isCreator){
+        window.location.href = `/${data.room}/${data.hostKey}`;
+    }else{
+        window.location.href = `/${data.room}/${data.guestKey}`;
+    }
+})
 
 
 
@@ -80,7 +87,6 @@ function  createRoom(){
     createBtn.disabled = true;
     createWaitRoom(roomName);
     unbindList();
-    socket.emit('register',{"userName":userName,"socketId":socket.id});
     isCreator = true;
     
 }
@@ -130,39 +136,21 @@ function bindstartGame(){
 }
 
 
-
-
-
-
-
-
-
-
-
 // in the room that contain two player name, we need to send those two socket
 // to the that room and launch the game.
 // only creator can start the game.
 // when the game is launch those socket need to force into the room
 // 
 function startGame(){
-    console.log('game start.');
+    console.log('game start. room name'+currentRoom);
+    console.log("creator: "+myself);
+    console.log("guest: "+ otherPlayer);
     socket.emit('startGame',{
         room:currentRoom,
         creator:myself,
         others:otherPlayer,
-    })
+    });
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -195,7 +183,7 @@ function bindList(){
 
 function bindlisthelper(event){
     curr = event.target;
-    curr.style.background = 'red';
+    curr.style.background = "#ffb3b3";
     let enterBtn = document.getElementById('enterRoom');
     enterBtn.disabled = false;
     if(prev !=null && prev != curr){
@@ -221,5 +209,9 @@ function bindAction(){
     enterBtn.addEventListener('click',enterRoom);
     bindList();
     enterBtn.disabled = true;
+    document.addEventListener('DOMContentLoaded',()=>{
+        let userName = document.querySelector('.uName').innerHTML;
+        socket.emit('register',{"userName":userName});    
+    })    
 }
 bindAction();

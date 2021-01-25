@@ -5,6 +5,7 @@ container{
     border: solid;
     border-width: 2px;
     margin-top: 10%;
+    background-color: #ffffe6;
 }
 ul li,.waitList li{
     display: block;
@@ -13,6 +14,9 @@ ul li,.waitList li{
     border:solid;
     border-color: black;
     border-width: 1px;
+    padding:2%;
+    background-color: white;
+    text-align: center;
 }
 
 
@@ -21,6 +25,7 @@ lobbyRoom{
     width: 50%;
     margin: auto;
     border: solid;
+    background-color:#e6f7ff;
     border-style:line;
     border-width: 2px;
     margin-top:5%;
@@ -30,3 +35,18 @@ lobbyRoom{
 .waitRoom{
     border-style: none;
 }
+h3, label{
+    padding: 5px 5px 5px 5px;
+}
+.room2{
+    padding: 2% 0% 2% 2%;
+}
+
+h3{
+    text-align: center;
+}
+
+#hugeTitle {
+    font-size:30px;
+}
+
